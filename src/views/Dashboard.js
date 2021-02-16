@@ -175,8 +175,6 @@ class Dashboard extends React.Component {
     this.props.getAlumno();
     await this.props.verTareas(this.props.alumno);
     this.setGrado();
-    console.log(this.props.tareas);
-
     
   }
 
@@ -632,7 +630,9 @@ class Dashboard extends React.Component {
                         <tr></tr>
                         {this.props.enviadas.map(tarea=>( 
                           <tr>
-                            
+                            <td>
+                              {tarea.fecha}
+                            </td>
                             <td className="text-left">
                               {tarea.titulo}
                               {tarea.estatus=="2" ? (

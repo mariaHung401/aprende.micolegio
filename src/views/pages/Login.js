@@ -8,8 +8,7 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Label,
-  FormGroup,
+  Alert,
   Form,
   Input,
   InputGroupAddon,
@@ -27,6 +26,7 @@ class Login extends React.Component {
     super();
     this.state = {
       codigo:"",
+      accesoNegado:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -61,9 +61,12 @@ class Login extends React.Component {
         console.log(error);
     });
     let result = await respuesta.json();
-    if(result[0]!==undefined){
+    if(result[0].length>0){
+      this.setState({accesoNegado:false});
       this.props.setAlumno(result)
       this.props.history.push("/admin/dashboard");
+    }else{
+      this.setState({accesoNegado:true});
     }
   }
   render() {
@@ -112,6 +115,15 @@ class Login extends React.Component {
               </Form>
             </Col>
           </Row>
+          {this.state.accesoNegado ? (
+            <Row>
+              <Col className="ml-auto mr-auto" lg="4" md="6">
+                <Alert color="danger">
+                  <span>Acceso Negado</span>
+                </Alert>
+              </Col>
+            </Row>
+          ) : (null)}
         </Container>
         <div
           className="full-page-background"
