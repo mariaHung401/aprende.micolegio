@@ -29,7 +29,6 @@ class Charts extends React.Component {
     return (
       <>
         <div className="content">
-          
           <Row>
             <Col md="6">
               <Card className="card-chart">

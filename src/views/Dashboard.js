@@ -57,19 +57,20 @@ class Dashboard extends React.Component {
       tipodoc:null,
       acepta:"*",
       asignatura:null,
+      mensajes:[],
     }
     this.handleImageChange = this.handleImageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
   }
-  
+
   handleImageChange(e) {
     e.preventDefault();
     const file = e.target.files[0];
     const tiposimagen = ["jpg","jpeg","gif","png","tiff","tif","bmp"]
     const tiposdocs = ["doc","docx","pdf","xls","xlsx","ppt","pptx","csv","txt"]
-    
+
     if(this.state.tipodoc=="i"){
       if (!file.type.includes("image")){
         alert("No es un archivo de imagen "+file.type.toLowerCase());
@@ -94,7 +95,7 @@ class Dashboard extends React.Component {
             compressedBlob.lastModifiedDate = new Date();
 
             // Conver the blob to file
-            const convertedBlobFile = new File([compressedBlob], 
+            const convertedBlobFile = new File([compressedBlob],
               file.name, { type: file.type, lastModified: Date.now()});
 
             // Here you are free to call any method you are gonna use to upload your file example uploadToCloudinaryUsingPreset(convertedBlobFile)
@@ -106,7 +107,6 @@ class Dashboard extends React.Component {
               });
             };
             reader.readAsDataURL(convertedBlobFile);
-            
         })
         .catch(e => {
             // Show the user a toast message or notification that something went wrong while compressing file
@@ -117,8 +117,8 @@ class Dashboard extends React.Component {
       const rand = min + Math.random() * (max - min);
       e.preventDefault();
       const fileUnchange = file;
-      const fileNew = new File([fileUnchange], 
-        String(rand)+fileUnchange.name, 
+      const fileNew = new File([fileUnchange],
+        String(rand)+fileUnchange.name,
         { type: fileUnchange.type, lastModified: Date.now()});
       if(fileNew.size<2000000){
         let doc = new FileReader();
@@ -158,7 +158,46 @@ class Dashboard extends React.Component {
     });
     this.refs.fileInput.value = null;
   }
-  
+
+  verEnvios = async () => {
+    let grado=this.props.gradofijo;
+    if(grado!="" || grado!==undefined){
+      grado=grado.substr(3,6).toUpperCase();
+    }
+    const data = {
+      id:this.props.colegio.id,
+      grado: grado
+    };
+    let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/masterside/incoming_webhook/verRespuestas';
+    let respuesta = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        Accept: 'application/json',
+    })
+    .catch(error => {
+        console.log(error);
+    });
+    let result = await respuesta.json();
+    console.log(result)
+    let alumnos=[];
+    result[0].forEach(envio => {
+      if(alumnos.filter(alumno=>alumno==envio.alumno).length==0){
+        alumnos.push(envio.alumno)
+      }
+    });
+    let totalrevisados = "0";
+    if(result[2][0]!==undefined){
+      totalrevisados = result[2][0].total;
+    }else{
+      totalrevisados = "0";
+    }
+    this.setState({envios:result[0], revisados:result[1],
+      activos: alumnos, totalrevisados:totalrevisados});
+  }
+
   setGrado = () => {
     let primaria=["B11-1","B11-2","B11-3","B11-4","B11-5","B11-6"];
     let valor = primaria.find(grado=>grado==this.props.alumno.grado.substr(0,5));
@@ -172,10 +211,33 @@ class Dashboard extends React.Component {
 
   componentDidMount = async () => {
     this.props.verCredenciales();
+    if(!this.props.alumno.codigoweb){
+      this.props.history.push("/login");
+    }
     this.props.getAlumno();
     await this.props.verTareas(this.props.alumno);
+    await this.verMensaje(this.props.alumno.codigoweb);
     this.setGrado();
-    
+  }
+
+  verMensaje = async (codigo) => {
+    if(codigo!=""){
+      codigo=codigo.substr(0, 3);
+    }
+    let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/micolegio/incoming_webhook/leerMensajes?codigo='+codigo;
+    let respuesta = await fetch(url, {
+        method: 'GET',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        Accept: 'application/json',
+    }).catch(error => {
+        console.log(error);
+    });
+    let mensajes = await respuesta.json();
+    this.setState({ mensajes:mensajes});
+    // console.log(mensajes)
+    // console.log(codigo)
   }
 
   quitar = async (id) => {
@@ -184,7 +246,7 @@ class Dashboard extends React.Component {
       idtarea:id
     };
     fetch(url, {
-      method: 'POST', 
+      method: 'POST',
       body: JSON.stringify(datadir),
       headers:{
           'Content-Type': 'application/json'
@@ -218,17 +280,17 @@ class Dashboard extends React.Component {
             bucketName: 'pruebareact',
             dirName: 'aprende',
             region: 'us-east-1',
-            accessKeyId: this.props.as3, 
-            secretAccessKey: this.props.ss3, 
+            accessKeyId: this.props.as3,
+            secretAccessKey: this.props.ss3,
         })
         .then(data => {
             const datadir = {
                 direccion:data.location,
                 codigoweb:this.props.alumno.codigoweb,
                 alumno:this.props.alumno.apellidos+", "+this.props.alumno.nombres,
-                grado: this.props.alumno.grado, 
-                materia: materia, 
-                nummateria: nummateria, 
+                grado: this.props.alumno.grado,
+                materia: materia,
+                nummateria: nummateria,
                 idtarea:this.state.tarea.id,
                 titulo:this.state.tarea.titulo,
                 mensaje:this.state.mensaje,
@@ -238,7 +300,7 @@ class Dashboard extends React.Component {
             };
             let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/micolegio/incoming_webhook/subirTarea';
             fetch(url, {
-                method: 'POST', 
+                method: 'POST',
                 body: JSON.stringify(datadir),
                 headers:{
                     'Content-Type': 'application/json'
@@ -251,7 +313,7 @@ class Dashboard extends React.Component {
                     <span>Recurso en la nube</span>
                   </Alert>
                 )
-                this.setState({subiendo:nube, 
+                this.setState({subiendo:nube,
                 asignatura:null, singleSelect:null});
                 await this.props.verTareas(this.props.alumno);
                 this.setState({subirRecurso:false, mensaje:null,
@@ -266,9 +328,8 @@ class Dashboard extends React.Component {
               )
               this.setState({subiendo:msjerror});
             });
-            
         })
-        .catch(err => 
+        .catch(err =>
           {
             let msjerror = (
               <Alert color="danger">
@@ -296,24 +357,18 @@ class Dashboard extends React.Component {
             </p>
           }
           >
-          
         </ReactBSAlert>
-          
-       
       ),
     });
   }
 
-  
-
   render() {
     let tiposRecursos = [
-        { value: "i", label:"Imagen", 
+        { value: "i", label:"Imagen",
           acepta:".jpg,.jpeg,.gif,.png,.tiff,.tif,.bmp"},
-        { value: "d", label:"Documento", 
+        { value: "d", label:"Documento",
           acepta:".doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.csv,.txt" },
     ]
-    
     return (
       <>
         <div className="content">
@@ -322,7 +377,6 @@ class Dashboard extends React.Component {
               <Card className="card-stats">
                 <CardBody>
                   <Row>
-                   
                     <Col md="12" xs="12">
                       <div className="numbers">
                         <p className="card-category">
@@ -355,28 +409,32 @@ class Dashboard extends React.Component {
                     />
                   </Link>
                 </CardHeader>
-                <CardBody>
-                
-              </CardBody>
-              <CardFooter>
-                
-              </CardFooter>
+                <CardFooter>
+                </CardFooter>
               </Card>
             </Col>
-            <Col lg="3" md="6" sm="6">
-
+            <Col lg="6" md="12" sm="12">
               <Card className="card-stats">
                 <CardBody>
                   <Row>
-                    <Col md="4" xs="5">
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-single-02 text-danger" />
-                      </div>
-                    </Col>
-                    <Col md="8" xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Mi Actividad</p>
-                        <CardTitle tag="p"></CardTitle>
+                    <Col md="12" xs="12">
+                      <div className="text">
+                        <CardHeader>
+                          <p className="card-category">Mensajes</p>
+                        </CardHeader>
+                        <CardBody>
+                          {this.state.mensajes.map(mensaje=>(
+                            <div>
+                              <span>
+                                <h6 tag="p">
+                                  {mensaje.grado.label} {mensaje.seccion}
+                                </h6>
+                                  {mensaje.titulo} {mensaje.mensaje}
+                              </span>
+                              <span>{mensaje.fecha}</span>
+                            </div>
+                          ))}
+                        </CardBody>
                         <p />
                       </div>
                     </Col>
@@ -386,44 +444,13 @@ class Dashboard extends React.Component {
                   <hr />
                   <div className="stats">
                     <i className="fa fa-clock-o" />
-                    
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="3" md="6" sm="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="4" xs="5">
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-send text-warning" />
-                      </div>
-                    </Col>
-                    <Col md="8" xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Mensajes</p>
-                        <CardTitle tag="p"></CardTitle>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="fa fa-refresh" />
-                    
                   </div>
                 </CardFooter>
               </Card>
             </Col>
           </Row>
-          
-          
           <Row>
             <Col md="6">
-
             {this.state.subirRecurso ? (
               <Col md="12">
                 <Card className="card-tasks">
@@ -435,7 +462,7 @@ class Dashboard extends React.Component {
                     <Col md="9">
                       <FormGroup>
                         <Input placeholder="Comentario hacia el docente"
-                          type="text" 
+                          type="text"
                           value={this.state.mensaje}
                           onChange={(texto) =>
                               this.setState({ mensaje:texto.target.value })
@@ -465,7 +492,7 @@ class Dashboard extends React.Component {
                         name="singleSelect"
                         value={this.state.tipodoc}
                         onChange={(value) =>
-                          this.setState({ tipodoc: value.value, 
+                          this.setState({ tipodoc: value.value,
                             acepta:value.acepta })
                         }
                         options={tiposRecursos}
@@ -475,10 +502,10 @@ class Dashboard extends React.Component {
                     <Col md="12">
                       <FormGroup>
                         <div className="fileinput text-center">
-                          <input type="file" 
+                          <input type="file"
                             accept={this.state.acepta}
-                            onChange={this.handleImageChange} 
-                            ref="fileInput" 
+                            onChange={this.handleImageChange}
+                            ref="fileInput"
                           />
                           {this.state.tipodoc=="i" ? (
                             <>
@@ -490,11 +517,10 @@ class Dashboard extends React.Component {
                           {this.state.tipodoc!=null ? (
                             <div>
                               { this.state.file === null ? (
-                                <Button className="btn-round" 
+                                <Button className="btn-round"
                                   onClick={() => this.handleClick()}>
                                 {this.props.avatar ? "Add Photo" : "Selecciona el archivo"}
                                 </Button>
-                                
                               ) : (
                                 <span>
                                   <Button className="btn-round" onClick={() => this.handleClick()}>
@@ -513,28 +539,25 @@ class Dashboard extends React.Component {
                               )}
                             </div>
                           ) : (null)}
-                         
-                          
                             {this.state.subiendo}
                         </div>
                       </FormGroup>
-                    </Col>   
+                    </Col>
                   </CardBody>
                   <CardFooter>
                   {this.state.file ? (
                   <Row>
                     <Col md="3" />
                     <Col md="9">
-                      <Button className="btn-round" 
+                      <Button className="btn-round"
                       color="info" type="submit"
                       onClick={()=>this.uploadFile()}
                     >
-                        Subir y registrar tarea 
+                        Subir y registrar tarea
                       </Button>
                     </Col>
                   </Row>
                   ):(null)}
-                  
                 </CardFooter>
                 </Card>
               </Col>
@@ -550,7 +573,7 @@ class Dashboard extends React.Component {
                     <Table>
                       <tbody>
                         <tr></tr>
-                        {this.props.tareas.map(tarea=>( 
+                        {this.props.tareas.map(tarea=>(
                           <tr>
                             <td className="text-left">
                               {tarea.fecha}
@@ -562,12 +585,10 @@ class Dashboard extends React.Component {
                               {tarea.titulo}
                             </td>
                             <td className="td-actions text-left">
-                              
                               {tarea.direccion ? (
                                 <div className="timeline-footer">
-                                
-                                <Button className="btn-round" 
-                                  color="primary" 
+                                <Button className="btn-round"
+                                  color="primary"
                                   outline
                                   href={tarea.direccion}
                                       target="_blank"
@@ -578,13 +599,11 @@ class Dashboard extends React.Component {
                               ) : (null)}
                           </td>
                           <td className="td-actions text-left">
-                              
                               {tarea.direccion ? (
                                 <div className="timeline-footer">
-                                
-                                <Button className="btn-round" 
-                                  color="warning" 
-                                  onClick={()=>this.setState({subirRecurso:true, 
+                                <Button className="btn-round"
+                                  color="warning"
+                                  onClick={()=>this.setState({subirRecurso:true,
                                     tarea:tarea, file:null, subiendo:null,
                                     file:null, imagePreviewUrl:defaultImage,
                                     tipodoc:null,
@@ -594,15 +613,12 @@ class Dashboard extends React.Component {
                                 </Button>
                                 </div>
                               ) : (null)}
-                          </td>  
-                          
+                          </td>
                             <td className="text-left">
                               {tarea.materia}
                             </td>
-                            
                           </tr>
                         ))}
-                        
                       </tbody>
                     </Table>
                   </div>
@@ -611,7 +627,6 @@ class Dashboard extends React.Component {
                   <hr />
                   <div className="stats">
                     <i className="fa fa-refresh spin" />
-                    
                   </div>
                 </CardFooter>
               </Card>
@@ -628,7 +643,7 @@ class Dashboard extends React.Component {
                     <Table>
                       <tbody>
                         <tr></tr>
-                        {this.props.enviadas.map(tarea=>( 
+                        {this.props.enviadas.map(tarea=>(
                           <tr>
                             <td>
                               {tarea.fecha}
@@ -640,22 +655,20 @@ class Dashboard extends React.Component {
                               ):(null)}
                               {tarea.vista=="1" ? (
                                 <i className="text-success fa fa-check" />
-                              ):( 
+                              ):(
                                 tarea.vista=="2" ? (
                                   <i className="text-info fa fa-plus" />
-                                ) : ( 
+                                ) : (
                                   tarea.vista=="3" ? (
                                   <i className="text-danger fa fa-heart" />
                                 ) : (null))
                               )}
                             </td>
                             <td className="td-actions text-left">
-                              
                               {tarea.direccion ? (
                                 <div className="timeline-footer">
-                                
-                                <Button className="btn-round" 
-                                  color="primary" 
+                                <Button className="btn-round"
+                                  color="primary"
                                   outline
                                   href={tarea.direccion}
                                       target="_blank"
@@ -666,22 +679,19 @@ class Dashboard extends React.Component {
                               ) : (null)}
                           </td>
                           <td className="td-actions text-left">
-                              
                               {tarea.estatus=="1" ? (
                                 <div className="timeline-footer">
-                                
-                                <Button className="btn-round" 
-                                  color="danger" 
+                                <Button className="btn-round"
+                                  color="danger"
                                   onClick={()=>this.quitar(tarea.id)}
                                   >
                                     <i className="fa fa-remove" />
                                 </Button>
                                 </div>
                               ) : (null)}
-                          </td>  
+                          </td>
                           </tr>
                         ))}
-                        
                       </tbody>
                     </Table>
                   </div>
@@ -690,7 +700,6 @@ class Dashboard extends React.Component {
                   <hr />
                   <div className="stats">
                     <i className="fa fa-refresh spin" />
-                    
                   </div>
                 </CardFooter>
               </Card>
@@ -723,7 +732,6 @@ class Dashboard extends React.Component {
             </Col>
             </Col>
           </Row>
-          
         </div>
       </>
     );

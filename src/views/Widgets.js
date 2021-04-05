@@ -1,4 +1,3 @@
-
 import React from "react";
 
 // reactstrap components
@@ -48,7 +47,7 @@ class Widgets extends React.Component {
                 <div className="table-full-width table-responsive">
                     <Table>
                       <tbody>
-                      {this.props.tareas.map(tarea=>( 
+                      {this.props.tareas.map(tarea=>(
                           <tr>
                             <td >
                               <div className="timeline-badge danger">
@@ -95,7 +94,6 @@ class Widgets extends React.Component {
                             </td>
                           </tr>
                         ))}
-                        
                       </tbody>
                     </Table>
                   </div>
@@ -142,7 +140,6 @@ class Widgets extends React.Component {
                         <td>La Celula</td>
                         <td>Prezzi</td>
                       </tr>
-                      
                     </tbody>
                   </Table>
                 </CardBody>
@@ -165,7 +162,6 @@ class Widgets extends React.Component {
                         <div className="timeline-body">
                           <p>
                           La digestión humana
-                          
                           </p>
                         </div>
                         <h6>
@@ -191,7 +187,6 @@ class Widgets extends React.Component {
                               >
                                 Descargar
                               </DropdownItem>
-                              
                             </DropdownMenu>
                           </UncontrolledDropdown>
                         </div>
@@ -205,7 +200,6 @@ class Widgets extends React.Component {
                         <div className="timeline-heading">
                           <Badge color="success" pill>
                           Educación Física
-                          
                           </Badge>
                         </div>
                         <div className="timeline-body">
@@ -236,7 +230,6 @@ class Widgets extends React.Component {
                               >
                                 Descargar
                               </DropdownItem>
-                              
                             </DropdownMenu>
                           </UncontrolledDropdown>
                         </div>
@@ -250,8 +243,6 @@ class Widgets extends React.Component {
                         <div className="timeline-heading">
                           <Badge color="success" pill>
                           Geografía
-                          
-
                           </Badge>
                         </div>
                         <div className="timeline-body">
@@ -282,7 +273,6 @@ class Widgets extends React.Component {
                               >
                                 Descargar
                               </DropdownItem>
-                              
                             </DropdownMenu>
                           </UncontrolledDropdown>
                         </div>
@@ -296,7 +286,6 @@ class Widgets extends React.Component {
                         <div className="timeline-heading">
                           <Badge color="success" pill>
                           Matematicas
-                          
                           </Badge>
                         </div>
                         <div className="timeline-body">
@@ -327,7 +316,6 @@ class Widgets extends React.Component {
                               >
                                 Descargar
                               </DropdownItem>
-                              
                             </DropdownMenu>
                           </UncontrolledDropdown>
                         </div>
@@ -341,7 +329,6 @@ class Widgets extends React.Component {
                         <div className="timeline-heading">
                           <Badge color="success" pill>
                           Orientación
-                          
                           </Badge>
                         </div>
                         <div className="timeline-body">
@@ -372,7 +359,6 @@ class Widgets extends React.Component {
                               >
                                 Descargar
                               </DropdownItem>
-                              
                             </DropdownMenu>
                           </UncontrolledDropdown>
                         </div>
@@ -386,8 +372,6 @@ class Widgets extends React.Component {
                         <div className="timeline-heading">
                           <Badge color="success" pill>
                           Castellano
-
-                          
                           </Badge>
                         </div>
                         <div className="timeline-body">
@@ -418,7 +402,6 @@ class Widgets extends React.Component {
                               >
                                 Descargar
                               </DropdownItem>
-                              
                             </DropdownMenu>
                           </UncontrolledDropdown>
                         </div>
@@ -429,7 +412,6 @@ class Widgets extends React.Component {
               </Card>
             </Col>
           </Row>
-          
         </div>
       </>
     );

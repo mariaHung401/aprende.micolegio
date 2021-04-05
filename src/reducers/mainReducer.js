@@ -6,6 +6,8 @@ const INITIAL_STATE = {
     enviadas:[],
     as3:null,
     ss3:null,
+    // mensajes:[],
+    // recibidos:[],
     Grado: [
         { label: "Maternal", value:"A11-0" },
         { label: "Sala de 3", value:"A11-1" },
@@ -22,7 +24,7 @@ const INITIAL_STATE = {
         { label: "3er año", value:"B11-9" },
         { label: "4to año", value:"D18-1" },
         { label: "5to año", value:"D18-2" },
-      ],
+    ],
     Seccion: [
         { value: "A", label:"A" },
         { value: "B", label:"B" },
@@ -31,7 +33,7 @@ const INITIAL_STATE = {
         { value: "E", label:"E" },
         { value: "F", label:"F" },
         { value: "U", label:"U" },
-      ],
+    ],
     Primaria: [
         { value: "1", label:"Lengua y Literatura", key:"B11-1" },
         { value: "2", label:"Matemática" },
@@ -40,7 +42,7 @@ const INITIAL_STATE = {
         { value: "5", label:"Educación Estética" },
         { value: "6", label:"Educación Física y Deportes" },
         { value: "0", label:"*" },
-      ],
+    ],
     Secundaria: [
         { value: "1", label:"Castellano", key:"100000" },
         { value: "2", label:"Inglés y otras Lenguas", key:"0" },
@@ -57,14 +59,14 @@ const INITIAL_STATE = {
         { value: "13", label:"Form. Soberanía Nacional", key:"0"  },
         { value: "14", label:"Ciencias de la Tierra", key:"0"  },
         { value: "0", label:"-", key:"0"  },
-      ],
+    ],
 }
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case 'ver_credenciales':
-            return { 
-                ...state, 
+            return {
+                ...state,
                 as3:action.payload[0],
                 ss3:action.payload[1]
             };
@@ -77,32 +79,38 @@ export default (state = INITIAL_STATE, action) => {
             if( action.payload[2][0]!==undefined){
                 datos=action.payload[2][0]
             }
-            return { 
-                ...state, 
+            return {
+                ...state,
                 alumno: action.payload[0][0],
                 foto: foto,
                 datos:datos,
             };
         case 'ver_tareas':
-            return { 
-                ...state, 
+            return {
+                ...state,
                 tareas: action.payload[0],
                 enviadas: action.payload[1],
             };
         case 'get_alumno':
-            return { 
-                ...state, 
+            return {
+                ...state,
             };
         case 'set_foto':
-            return { 
-                ...state, 
+            return {
+                ...state,
                 foto:action.payload,
             };
         case 'set_datos':
-            return { 
-                ...state, 
+            return {
+                ...state,
                 datos:action.payload,
             };
+        // case 'ver_mensaje':
+        //     return {
+        //         ...state,
+        //         mensajes:action.payload[0],
+        //         recibidos:action.payload[1],
+        //     };
         default: return state;
     };
 }

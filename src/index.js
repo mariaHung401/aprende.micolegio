@@ -34,7 +34,7 @@ ReactDOM.render(
         <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
         <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
         <Route path="/login" component={Login} />
-        <Route path="/dpage/:id" render={(props) => <DPage {...props} />} /> 
+        <Route path="/dpage/:id" render={(props) => <DPage {...props} />} />
         <Redirect to="/login" />
       </Switch>
     </Router>
