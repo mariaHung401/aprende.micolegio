@@ -1,24 +1,3 @@
-// export const verMensaje = (codigo) => async (dispatch) => {
-//   let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/micolegio/incoming_webhook/leerMensajes?codigo=214';
-//   let respuesta = await fetch(url, {
-//       method: 'GET',
-//       headers:{
-//           'Content-Type': 'application/json'
-//       },
-//       Accept: 'application/json',
-//   })
-//   .catch(error => {
-//       console.log(error);
-//   });
-//   let result = await respuesta.json();
-//   console.log(respuesta)
-//   console.log(result)
-//   dispatch({
-//     type: 'ver_mensaje',
-//     payload: result
-//   });
-// }
-
 export const verTareas = (alumno) => async (dispatch) => {
   let tareas=[];
   if(alumno.codigoweb!==undefined){

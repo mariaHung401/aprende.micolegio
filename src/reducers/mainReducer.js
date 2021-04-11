@@ -6,8 +6,6 @@ const INITIAL_STATE = {
     enviadas:[],
     as3:null,
     ss3:null,
-    // mensajes:[],
-    // recibidos:[],
     Grado: [
         { label: "Maternal", value:"A11-0" },
         { label: "Sala de 3", value:"A11-1" },
@@ -105,12 +103,6 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 datos:action.payload,
             };
-        // case 'ver_mensaje':
-        //     return {
-        //         ...state,
-        //         mensajes:action.payload[0],
-        //         recibidos:action.payload[1],
-        //     };
         default: return state;
     };
 }

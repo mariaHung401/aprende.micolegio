@@ -45,6 +45,7 @@ class Dashboard extends React.Component {
       grado:null,
       codigoweb:null,
       materias:null,
+      fecha: null,
       tareas:[],
       enviadas:[],
       modal:null,
@@ -236,8 +237,6 @@ class Dashboard extends React.Component {
     });
     let mensajes = await respuesta.json();
     this.setState({ mensajes:mensajes});
-    // console.log(mensajes)
-    // console.log(codigo)
   }
 
   quitar = async (id) => {
@@ -417,33 +416,42 @@ class Dashboard extends React.Component {
               <Card className="card-stats">
                 <CardBody>
                   <Row>
-                    <Col md="12" xs="12">
-                      <div className="text">
-                        <CardHeader>
-                          <p className="card-category">Mensajes</p>
-                        </CardHeader>
-                        <CardBody>
-                          {this.state.mensajes.map(mensaje=>(
-                            <div>
-                              <span>
-                                <h6 tag="p">
-                                  {mensaje.grado.label} {mensaje.seccion}
-                                </h6>
-                                  {mensaje.titulo} {mensaje.mensaje}
-                              </span>
-                              <span>{mensaje.fecha}</span>
-                            </div>
-                          ))}
-                        </CardBody>
-                        <p />
+                    <Col md="3" xs="4">
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-chat-33 text-danger" />
                       </div>
+                    </Col>
+                    <Col md="9" xs="8">
+                      <p className="card-category" />
+                      {this.state.mensajes.slice(0, 1).map(mensaje=>(
+                        <div>
+                          {mensaje ?
+                            (<div>
+                              <span>
+                                {mensaje.grado.label} {mensaje.seccion}
+                              </span>
+                              <br />
+                              <h6>
+                              <span className="text-danger">{mensaje.fecha} ({mensaje.hora}):</span>{mensaje.titulo} {mensaje.mensaje}
+                              </h6>
+                            </div>) :
+
+                            (<div>
+                              <span>
+                                No hay mensajes
+                              </span>
+                            </div>)
+                          }
+                        </div>
+                      ))}
                     </Col>
                   </Row>
                 </CardBody>
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <i className="fa fa-clock-o" />
+                    <i className="nc-icon nc-bell-55" />
+                    Mensajes del docente
                   </div>
                 </CardFooter>
               </Card>
