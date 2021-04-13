@@ -7,6 +7,7 @@ import { VectorMap } from "react-jvectormap";
 
 // reactstrap components
 import {
+  UncontrolledAlert,
   Badge,
   Button,
   Card,
@@ -14,6 +15,12 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
+  Collapse,
+  NavItem,
+  NavLink,
+  Nav,
+  TabContent,
+  TabPane,
   Label,
   FormGroup,
   Input,
@@ -23,6 +30,7 @@ import {
   Col,
 } from "reactstrap";
 import ReactBSAlert from "react-bootstrap-sweetalert";
+import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import * as mainActions from "../actions/mainActions";
 import { connect } from 'react-redux';
@@ -236,6 +244,7 @@ class Dashboard extends React.Component {
         console.log(error);
     });
     let mensajes = await respuesta.json();
+
     this.setState({ mensajes:mensajes});
   }
 
@@ -361,6 +370,49 @@ class Dashboard extends React.Component {
     });
   }
 
+  // notify = (place) => {
+  //   var color = Math.floor(Math.random() * 5 + 1);
+  //   var type;
+  //   switch (color) {
+  //     case 1:
+  //       type = "primary";
+  //       break;
+  //     case 2:
+  //       type = "success";
+  //       break;
+  //     case 3:
+  //       type = "danger";
+  //       break;
+  //     case 4:
+  //       type = "warning";
+  //       break;
+  //     case 5:
+  //       type = "info";
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   var options = {};
+  //   options = {
+  //     place: place,
+  //     message: (
+  //       <div>
+  //         <span
+  //           data-notify="icon"
+  //           className="nc-icon nc-bell-55"
+  //         />
+  //         <span>
+  //           Tienes nuevos mensaje
+  //         </span>
+  //       </div>
+  //     ),
+  //     type: type,
+  //     icon: "now-ui-icons ui-1_bell-53",
+  //     autoDismiss: 7,
+  //   };
+  //   this.refs.notificationAlert.notificationAlert(options);
+  // };
+
   render() {
     let tiposRecursos = [
         { value: "i", label:"Imagen",
@@ -370,6 +422,7 @@ class Dashboard extends React.Component {
     ]
     return (
       <>
+        <NotificationAlert ref="notificationAlert" />
         <div className="content">
           <Row>
             <Col lg="3" md="6" sm="6">
@@ -412,40 +465,93 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-            <Col lg="6" md="12" sm="12">
-              <Card className="card-stats">
+            <Col md="6">
+              <Card>
                 <CardBody>
-                  <Row>
-                    <Col md="3" xs="4">
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-chat-33 text-danger" />
-                      </div>
-                    </Col>
-                    <Col md="9" xs="8">
+                  <div className="nav-tabs-navigation">
+                    <div className="nav-tabs-wrapper">
+                      <Nav id="tabs" role="tablist" tabs>
+                        <NavItem>
+                          <NavLink
+                            aria-expanded={this.state.horizontalTabs === "Nuevo"}
+                            data-toggle="tab"
+                            href="#pablo"
+                            role="tab"
+                            className={
+                              this.state.horizontalTabs === "Nuevo"
+                                ? "active"
+                                : ""
+                            }
+                            onClick={() =>
+                              this.setState({ horizontalTabs: "Nuevo" })
+                            }
+                          >
+                            <span
+                              data-notify="icon"
+                              className="nc-icon nc-chat-33"
+                            /> Nuevo
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            aria-expanded={
+                              this.state.horizontalTabs === "Historial de mensajes"
+                            }
+                            data-toggle="tab"
+                            href="#pablo"
+                            role="tab"
+                            className={
+                              this.state.horizontalTabs === "Historial de mensajes"
+                                ? "active"
+                                : ""
+                            }
+                            onClick={() =>
+                              this.setState({ horizontalTabs: "Historial de mensajes" })
+                            }
+                          >
+                            <span
+                              data-notify="icon"
+                              className="nc-icon nc-bullet-list-67"
+                            /> Historial de mensajes
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
+                    </div>
+                  </div>
+                  <TabContent
+                    className="text-center"
+                    id="my-tab-content"
+                    activeTab={this.state.horizontalTabs}
+                  >
+                    <TabPane tabId="Nuevo" role="tabpanel">
                       <p className="card-category" />
                       {this.state.mensajes.slice(0, 1).map(mensaje=>(
                         <div>
-                          {mensaje ?
-                            (<div>
-                              <span>
-                                {mensaje.grado.label} {mensaje.seccion}
-                              </span>
-                              <br />
-                              <h6>
-                              <span className="text-danger">{mensaje.fecha} ({mensaje.hora}):</span>{mensaje.titulo} {mensaje.mensaje}
-                              </h6>
-                            </div>) :
-
-                            (<div>
-                              <span>
-                                No hay mensajes
-                              </span>
-                            </div>)
-                          }
+                          <span>
+                            {mensaje.grado.label} {mensaje.seccion}
+                          </span>
+                          <br />
+                          <h6>
+                            <span className="text-danger">{mensaje.fecha} ({mensaje.hora}):</span>{mensaje.titulo} {mensaje.mensaje}
+                          </h6>
                         </div>
                       ))}
-                    </Col>
-                  </Row>
+                    </TabPane>
+                    <TabPane tabId="Historial de mensajes" role="tabpanel">
+                      <p className="card-category" />
+                      {this.state.mensajes.map(mensaje=>(
+                        <div>
+                          <span>
+                            {mensaje.grado.label} {mensaje.seccion}
+                          </span>
+                          <br />
+                          <h6>
+                            <span className="text-danger">{mensaje.fecha} ({mensaje.hora}):</span>{mensaje.titulo} {mensaje.mensaje}
+                          </h6>
+                        </div>
+                      ))}
+                    </TabPane>
+                  </TabContent>
                 </CardBody>
                 <CardFooter>
                   <hr />
