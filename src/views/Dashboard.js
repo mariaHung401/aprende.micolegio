@@ -227,12 +227,14 @@ class Dashboard extends React.Component {
     await this.props.verTareas(this.props.alumno);
     await this.verMensaje(this.props.alumno.codigoweb);
     this.setGrado();
+    this.verMensaje(this.props.alumno.codigoweb);
   }
 
   verMensaje = async (codigo) => {
     if(codigo!=""){
       codigo=codigo.substr(0, 3);
     }
+    let grado = null;
     let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/micolegio/incoming_webhook/leerMensajes?codigo='+codigo;
     let respuesta = await fetch(url, {
         method: 'GET',
@@ -244,10 +246,14 @@ class Dashboard extends React.Component {
         console.log(error);
     });
     let mensajes = await respuesta.json();
-    mensajes = mensajes.filter(mensaje=>(mensaje.key="*"));
+    console.log(mensajes);
+    if (this.props.alumno.grado.length>0){
+      grado = this.props.alumno.grado.substr(0,5);
+    }
+    mensajes = mensajes.filter(mensaje=>(mensaje.grado.key=="*" || mensaje.grado.key==grado));
     this.setState({ mensajes:mensajes });
-    console.log(this.props.alumno.grado)
-    console.log(mensajes)
+    console.log(this.props.alumno.grado);
+    console.log(mensajes);
   }
 
   quitar = async (id) => {
