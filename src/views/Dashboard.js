@@ -244,8 +244,10 @@ class Dashboard extends React.Component {
         console.log(error);
     });
     let mensajes = await respuesta.json();
-
-    this.setState({ mensajes:mensajes});
+    mensajes = mensajes.filter(mensaje=>(mensaje.key="*"));
+    this.setState({ mensajes:mensajes });
+    console.log(this.props.alumno.grado)
+    console.log(mensajes)
   }
 
   quitar = async (id) => {
