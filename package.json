@@ -1,6 +1,6 @@
 {
   "name": "aprende-micol",
-  "version": "1.2.2",
+  "version": "1.2.1",
   "description": "Servicio de gestion de actividades",
   "main": "index.js",
   "private": true,

@@ -67,6 +67,7 @@ class Dashboard extends React.Component {
       acepta:"*",
       asignatura:null,
       mensajes:[],
+      horizontalTabs: "nuevo",
     }
     this.handleImageChange = this.handleImageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -481,17 +482,17 @@ class Dashboard extends React.Component {
                       <Nav id="tabs" role="tablist" tabs>
                         <NavItem>
                           <NavLink
-                            aria-expanded={this.state.horizontalTabs === "Nuevo"}
+                            aria-expanded={this.state.horizontalTabs === "nuevo"}
                             data-toggle="tab"
-                            href="#pablo"
+                            href="#nuevo"
                             role="tab"
                             className={
-                              this.state.horizontalTabs === "Nuevo"
+                              this.state.horizontalTabs === "nuevo"
                                 ? "active"
                                 : ""
                             }
                             onClick={() =>
-                              this.setState({ horizontalTabs: "Nuevo" })
+                              this.setState({ horizontalTabs: "nuevo" })
                             }
                           >
                             <span
@@ -506,7 +507,7 @@ class Dashboard extends React.Component {
                               this.state.horizontalTabs === "Historial de mensajes"
                             }
                             data-toggle="tab"
-                            href="#pablo"
+                            href="#historial"
                             role="tab"
                             className={
                               this.state.horizontalTabs === "Historial de mensajes"
@@ -531,7 +532,7 @@ class Dashboard extends React.Component {
                     id="my-tab-content"
                     activeTab={this.state.horizontalTabs}
                   >
-                    <TabPane tabId="Nuevo" role="tabpanel">
+                    <TabPane tabId="nuevo" role="tabpanel">
                       <p className="card-category" />
                       {this.state.mensajes.slice(0, 1).map(mensaje=>(
                         <div>
