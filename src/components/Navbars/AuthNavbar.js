@@ -1,23 +1,7 @@
-/*!
-
-=========================================================
-* Paper Dashboard PRO React - v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-pro-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
-
+import {Link} from 'react-router-dom';
 // reactstrap components
 import {
   Collapse,
@@ -26,6 +10,7 @@ import {
   NavItem,
   Nav,
   Container,
+  Button
 } from "reactstrap";
 
 class AuthNavbar extends React.Component {
@@ -61,8 +46,14 @@ class AuthNavbar extends React.Component {
       >
         <Container>
           <div className="navbar-wrapper">
-            <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
-              Paper Dashboard PRO React
+            <NavbarBrand href="#" onClick={(e) => e.preventDefault()}>
+              {/* <Link to="/" className="btn-link">
+                <img
+                  alt="..."
+                  className="img-circle img-no-padding img-responsive"
+                  src={require("assets/img/logo-micol.png")}
+                />
+              </Link> */}
             </NavbarBrand>
           </div>
           <button
@@ -85,34 +76,25 @@ class AuthNavbar extends React.Component {
           >
             <Nav navbar>
               <NavItem>
-                <NavLink to="/admin/dashboard" className="nav-link">
+                <Button
+                  target="_blank"
+                  href="http://www.micolegio.com/"
+                  className="btn-link"
+                  color="warning"
+                  onClick={() => this.notify("bl")}
+                >
                   <i className="nc-icon nc-layout-11" />
-                  Dashboard
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/auth/register" className="nav-link">
-                  <i className="nc-icon nc-book-bookmark" />
-                  Register
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/auth/login" className="nav-link">
+                  Micolegio
+                </Button>
+                {/* <Button
+                  href="https://blog.micolegio.com"
+                  className="btn-link"
+                  color="warning"
+                  onClick={() => this.notify("bl")}
+                >
                   <i className="nc-icon nc-tap-01" />
-                  Login
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/admin/user-profile" className="nav-link">
-                  <i className="nc-icon nc-satisfied" />
-                  User
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/auth/lock-screen" className="nav-link">
-                  <i className="nc-icon nc-key-25" />
-                  Lock
-                </NavLink>
+                  Blog
+                </Button> */}
               </NavItem>
             </Nav>
           </Collapse>

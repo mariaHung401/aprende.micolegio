@@ -5,7 +5,7 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 import AuthLayout from "layouts/Auth.js";
 import AdminLayout from "layouts/Admin.js";
-import Login from "views/pages/Login.js";
+// import Login from "views/pages/Login.js";
 import DPage from "views/pages/DPage.js";
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -32,9 +32,9 @@ ReactDOM.render(
       <Switch>
         <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
         <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-        <Route path="/login" component={Login} />
+        {/* <Route path="/login" component={Login} /> */}
         <Route path="/dpage/:id" render={(props) => <DPage {...props} />} />
-        <Redirect to="/login" />
+        <Redirect to="/auth/login" />
       </Switch>
     </Router>
   </Provider>,

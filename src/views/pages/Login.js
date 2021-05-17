@@ -31,8 +31,7 @@ class Login extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-    
-    
+
   handleChange = event => {
       this.setState({ codigo:event})
   }
@@ -46,11 +45,11 @@ class Login extends React.Component {
   ir = async ()=>{
     const data = {
       codigo:this.state.codigo,
-      
+
     };
     let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/micolegio/incoming_webhook/accesoAlumno';
     let respuesta = await fetch(url, {
-        method: 'POST', 
+        method: 'POST',
         body: JSON.stringify(data),
         headers:{
             'Content-Type': 'application/json'
@@ -90,15 +89,15 @@ class Login extends React.Component {
                           <i className="nc-icon nc-single-02" />
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Codigo Web" 
-                        type="text" 
-                        value={codigo} 
+                      <Input placeholder="Codigo Web"
+                        type="text"
+                        value={codigo}
                         onChange={(texto)=>this.handleChange(texto.target.value)}
                       />
                     </InputGroup>
-                    
+
                     <br />
-                    
+
                   </CardBody>
                   <CardFooter>
                     <Button
@@ -128,7 +127,7 @@ class Login extends React.Component {
         <div
           className="full-page-background"
           style={{
-            backgroundImage:  `url(${require("assets/img/bg/rawpixel-comm.jpg")})`,
+            backgroundImage:  `url(${require("assets/img/loginmicol.jpg")})`,
           }}
         />
       </div>

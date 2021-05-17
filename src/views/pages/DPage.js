@@ -46,11 +46,10 @@ class Login extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-    
   handleChange = event => {
       this.setState({ codigo:event})
   }
-  
+
   setGrado = (value) => {
     this.setState({ singleSelect: value })
     if(value.value>6){
@@ -81,7 +80,7 @@ class Login extends React.Component {
     };
     let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/micolegio/incoming_webhook/descargaWebColegio';
     let respuesta = await fetch(url, {
-        method: 'POST', 
+        method: 'POST',
         body: JSON.stringify(data),
         headers:{
             'Content-Type': 'application/json'
@@ -96,11 +95,11 @@ class Login extends React.Component {
   ir = async (codigo)=>{
     const data = {
       codigo:codigo,
-      
+
     };
     let url='https://webhooks.mongodb-realm.com/api/client/v2.0/app/aprendemicolegio-kmnsj/service/micolegio/incoming_webhook/accesoPublico';
     let respuesta = await fetch(url, {
-        method: 'POST', 
+        method: 'POST',
         body: JSON.stringify(data),
         headers:{
             'Content-Type': 'application/json'

@@ -521,7 +521,7 @@ class Dashboard extends React.Component {
                             <span
                               data-notify="icon"
                               className="nc-icon nc-bullet-list-67"
-                            /> Historial de mensajes
+                            /> Historial de mensajes <span className="text-danger">{this.state.mensajes.length}</span>
                           </NavLink>
                         </NavItem>
                       </Nav>

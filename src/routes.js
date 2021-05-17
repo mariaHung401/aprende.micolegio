@@ -1,5 +1,6 @@
 import Dashboard from "views/Dashboard.js";
 import Datos from "views/forms/Datos.js";
+import Login from "views/pages/Login.js";
 
 const routes = [
   {
@@ -16,6 +17,13 @@ const routes = [
     icon: "nc-icon nc-single-02",
     component: Datos,
     layout: "/admin",
+  },
+  {
+    path: "/login",
+    name: "Cerrar sesion",
+    icon: "nc-icon nc-circle-10",
+    component: Login,
+    layout: "/auth",
   },
 ];
 
