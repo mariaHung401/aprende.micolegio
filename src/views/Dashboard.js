@@ -247,14 +247,11 @@ class Dashboard extends React.Component {
         console.log(error);
     });
     let mensajes = await respuesta.json();
-    console.log(mensajes);
     if (this.props.alumno.grado.length>0){
       grado = this.props.alumno.grado.substr(0,5);
     }
     mensajes = mensajes.filter(mensaje=>(mensaje.grado.key=="*" || mensaje.grado.key==grado));
     this.setState({ mensajes:mensajes });
-    console.log(this.props.alumno.grado);
-    console.log(mensajes);
   }
 
   quitar = async (id) => {
@@ -378,49 +375,6 @@ class Dashboard extends React.Component {
       ),
     });
   }
-
-  // notify = (place) => {
-  //   var color = Math.floor(Math.random() * 5 + 1);
-  //   var type;
-  //   switch (color) {
-  //     case 1:
-  //       type = "primary";
-  //       break;
-  //     case 2:
-  //       type = "success";
-  //       break;
-  //     case 3:
-  //       type = "danger";
-  //       break;
-  //     case 4:
-  //       type = "warning";
-  //       break;
-  //     case 5:
-  //       type = "info";
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   var options = {};
-  //   options = {
-  //     place: place,
-  //     message: (
-  //       <div>
-  //         <span
-  //           data-notify="icon"
-  //           className="nc-icon nc-bell-55"
-  //         />
-  //         <span>
-  //           Tienes nuevos mensaje
-  //         </span>
-  //       </div>
-  //     ),
-  //     type: type,
-  //     icon: "now-ui-icons ui-1_bell-53",
-  //     autoDismiss: 7,
-  //   };
-  //   this.refs.notificationAlert.notificationAlert(options);
-  // };
 
   render() {
     let tiposRecursos = [
@@ -762,8 +716,16 @@ class Dashboard extends React.Component {
                 <CardTitle tag="h4">Tareas Enviadas</CardTitle>
                 </CardHeader>
                 <CardBody>
-                <div className="table-full-width table-responsive">
+                  <div className="table-full-width table-responsive">
                     <Table>
+                    <thead>
+                        <tr>
+                          <th>Fecha</th>
+                          <th>Titulo y Observación</th>
+                          <th>Comentario del alumno</th>
+                          <th>Descargar</th>
+                        </tr>
+                      </thead>
                       <tbody>
                         <tr></tr>
                         {this.props.enviadas.map(tarea=>(
@@ -771,7 +733,7 @@ class Dashboard extends React.Component {
                             <td>
                               {tarea.fecha}
                             </td>
-                            <td className="text-left">
+                            <td>
                               {tarea.titulo}
                               {tarea.estatus=="2" ? (
                                 <b>: {tarea.observacion}</b>
@@ -786,6 +748,9 @@ class Dashboard extends React.Component {
                                   <i className="text-danger fa fa-heart" />
                                 ) : (null))
                               )}
+                            </td>
+                            <td>
+                              <b class="text-danger">{tarea.mensaje}</b>
                             </td>
                             <td className="td-actions text-left">
                               {tarea.direccion ? (

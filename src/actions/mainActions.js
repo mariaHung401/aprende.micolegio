@@ -19,6 +19,8 @@ export const verTareas = (alumno) => async (dispatch) => {
         console.log(error);
     });
     tareas = await respuesta.json();
+    // console.log(tareas)
+    console.log(data)
   }else{
     tareas=[]
   }
