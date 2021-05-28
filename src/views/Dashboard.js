@@ -75,6 +75,13 @@ class Dashboard extends React.Component {
     this.handleRemove = this.handleRemove.bind(this);
   }
 
+  handleRefresh = () => {
+    // by calling this method react re-renders the component
+    // this.setState();
+    this.props.verTareas(this.props.alumno)
+    console.log("Pagina Refrescada")
+  };
+
   handleImageChange(e) {
     e.preventDefault();
     const file = e.target.files[0];
@@ -713,7 +720,15 @@ class Dashboard extends React.Component {
             <Col md="12">
               <Card className="card-tasks">
                 <CardHeader>
-                <CardTitle tag="h4">Tareas Enviadas</CardTitle>
+                  <CardTitle tag="h4">Tareas Enviadas</CardTitle>
+                  <Button
+                    onClick={this.handleRefresh}
+                    className="btn-round btn-icon"
+                    className="btn-link "
+                    color="danger"
+                  >
+                    <i className="nc-icon nc-refresh-69" /> Refrescar
+                  </Button>
                 </CardHeader>
                 <CardBody>
                   <div className="table-full-width table-responsive">
