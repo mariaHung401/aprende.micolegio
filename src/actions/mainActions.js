@@ -6,6 +6,7 @@ export const verTareas = (alumno) => async (dispatch) => {
       codigoweb:alumno.codigoweb,
       grado:alumno.grado,
     };
+    let grado = data.grado.substr(0,5)
     let respuesta = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -19,7 +20,7 @@ export const verTareas = (alumno) => async (dispatch) => {
         console.log(error);
     });
     tareas = await respuesta.json();
-    // console.log(tareas)
+    console.log(tareas)
     console.log(data)
   }else{
     tareas=[]

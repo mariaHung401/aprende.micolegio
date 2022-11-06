@@ -216,15 +216,20 @@ class Dashboard extends React.Component {
   }
 
   setGrado = () => {
+    let prescolar=["A11-0","A11-1","A11-2","A11-3"];
     let primaria=["B11-1","B11-2","B11-3","B11-4","B11-5","B11-6"];
-    let valor = primaria.find(grado=>grado==this.props.alumno.grado.substr(0,5));
-    console.log(valor);
-    if(valor===undefined){
+    let valorPres = prescolar.find(grado=>grado==this.props.alumno.grado.substr(0,5));
+    let valorPrim = primaria.find(grado=>grado==this.props.alumno.grado.substr(0,5));
+    console.log(valorPres);
+    console.log(valorPrim);
+    if(valorPrim===undefined & valorPres===undefined){
       this.setState({materias:this.props.Secundaria})
-    }else{
+    }else if(valorPrim!==undefined & valorPres===undefined) {
       this.setState({materias:this.props.Primaria})
+    }else if(valorPrim===undefined & valorPres!==undefined) {
+      this.setState({materias:this.props.Prescolar})
     }
-  }
+  };
 
   componentDidMount = async () => {
     this.props.verCredenciales();
@@ -653,22 +658,31 @@ class Dashboard extends React.Component {
                   <h5 className="card-category">Resumen de Actividades</h5>
                 </CardHeader>
                 <CardBody>
-                <div className="table-full-width table-responsive">
-                    <Table>
+                  <div className="table-full-width table-responsive">
+                    <Table responsive>
+                    <thead>
+                        <tr>
+                          <th>Area</th>
+                          <th>Titulo</th>
+                          <th>Fecha</th>
+                          <th>Descargar</th>
+                          <th>Contestar</th>
+                        </tr>
+                      </thead>
                       <tbody>
                         <tr></tr>
                         {this.props.tareas.map(tarea=>(
                           <tr>
                             <td className="text-left">
-                              {tarea.fecha}
-                            </td>
-                            <td className="text-left">
-                              {tarea.grado}
+                              {tarea.materia}
                             </td>
                             <td className="text-left">
                               {tarea.titulo}
                             </td>
-                            <td className="td-actions text-left">
+                            <td className="text-left">
+                              {tarea.fecha}
+                            </td>
+                            <td className="td-actions">
                               {tarea.direccion ? (
                                 <div className="timeline-footer">
                                 <Button className="btn-round"
@@ -681,26 +695,24 @@ class Dashboard extends React.Component {
                                 </Button>
                                 </div>
                               ) : (null)}
-                          </td>
-                          <td className="td-actions text-left">
-                              {tarea.direccion ? (
-                                <div className="timeline-footer">
-                                <Button className="btn-round"
-                                  color="warning"
-                                  onClick={()=>this.setState({subirRecurso:true,
-                                    tarea:tarea, file:null, subiendo:null,
-                                    file:null, imagePreviewUrl:defaultImage,
-                                    tipodoc:null,
-                                  })}
-                                >
-                                  <i className="fa fa-upload" />
-                                </Button>
-                                </div>
-                              ) : (null)}
-                          </td>
-                            <td className="text-left">
-                              {tarea.materia}
                             </td>
+                            <td className="td-actions">
+                              {tarea.direccion ? (
+                                  <div className="timeline-footer">
+                                  <Button className="btn-round"
+                                    color="warning"
+                                    onClick={()=>this.setState({subirRecurso:true,
+                                      tarea:tarea, file:null, subiendo:null,
+                                      file:null, imagePreviewUrl:defaultImage,
+                                      tipodoc:null,
+                                    })}
+                                  >
+                                    <i className="fa fa-upload" />
+                                  </Button>
+                                  </div>
+                                ) : (null)}
+                            </td>
+                            <td className="td-actions"></td>
                           </tr>
                         ))}
                       </tbody>
@@ -720,15 +732,17 @@ class Dashboard extends React.Component {
             <Col md="12">
               <Card className="card-tasks">
                 <CardHeader>
-                  <CardTitle tag="h4">Tareas Enviadas</CardTitle>
-                  <Button
-                    onClick={this.handleRefresh}
-                    className="btn-round btn-icon"
-                    className="btn-link "
-                    color="danger"
-                  >
-                    <i className="nc-icon nc-refresh-69" /> Refrescar
-                  </Button>
+                  <CardTitle tag="h4">
+                    <Button
+                      onClick={this.handleRefresh}
+                      className="btn-round btn-icon"
+                      className="btn-link "
+                      color="danger"
+                    >
+                      <i className="nc-icon nc-refresh-69" />
+                    </Button>
+                    Tareas Enviadas
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
                   <div className="table-full-width table-responsive">
@@ -739,6 +753,7 @@ class Dashboard extends React.Component {
                           <th>Titulo y Observación</th>
                           <th>Comentario del alumno</th>
                           <th>Descargar</th>
+                          <th>Eliminar</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -770,29 +785,30 @@ class Dashboard extends React.Component {
                             <td className="td-actions text-left">
                               {tarea.direccion ? (
                                 <div className="timeline-footer">
-                                <Button className="btn-round"
-                                  color="primary"
-                                  outline
-                                  href={tarea.direccion}
-                                      target="_blank"
-                                >
-                                  <i className="fa fa-download" />
-                                </Button>
+                                  <Button className="btn-round"
+                                    color="primary"
+                                    outline
+                                    href={tarea.direccion}
+                                        target="_blank"
+                                  >
+                                    <i className="fa fa-download" />
+                                  </Button>
                                 </div>
                               ) : (null)}
-                          </td>
-                          <td className="td-actions text-left">
+                            </td>
+                            <td className="td-actions text-left">
                               {tarea.estatus=="1" ? (
                                 <div className="timeline-footer">
-                                <Button className="btn-round"
-                                  color="danger"
-                                  onClick={()=>this.quitar(tarea.id)}
-                                  >
-                                    <i className="fa fa-remove" />
-                                </Button>
-                                </div>
+                                    <Button className="btn-round"
+                                      color="danger"
+                                      outline
+                                      onClick={()=>this.quitar(tarea.id)}
+                                      >
+                                        <i className="fa fa-remove" />
+                                    </Button>
+                                  </div>
                               ) : (null)}
-                          </td>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
